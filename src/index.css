@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    @apply text-[rgba(255,255,255,0.87)] bg-[#242424] font-sans w-full p-0;
+  }
+
+  body {
+    @apply grid place-items-center min-w-[320px] w-full max-w-[1440px] min-h-screen relative m-0 p-0 text-white;
+
+    font-family: "Roboto", serif;
+    font-optical-sizing: auto;
+    font-variation-settings:
+      "wdth" 100;
+  }
+
+}
+
+@media (prefers-reduced-motion) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+  }
+}
