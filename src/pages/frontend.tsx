@@ -1,9 +1,10 @@
+import { RouterProvider } from "react-router";
 import { createRoot } from "react-dom/client";
-import { Home } from "./home/Home";
+import { router } from "./route";
 
 function start() {
   const root = createRoot(document.getElementById("root")!);
-  root.render(<Home />);
+  root.render(<RouterProvider router={router} />);
 }
 
 if (document.readyState === "loading") {
