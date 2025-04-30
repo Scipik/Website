@@ -1,14 +1,19 @@
-import { useState, HTMLProps } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { FaCheck } from "react-icons/fa";
 import { GrLanguage } from "react-icons/gr";
+import { LanguageContext } from './LanguageContext';
+import { Spinner } from "../widgets/spinner";
 
 type ObjectOfObjects<T> = {
   [key: string]: T;
 };
 
-type Language = { label: string };
+type Language = { label: string }
 
+/**
+ * Available language selections
+ * Could easily expand if we depend on the ai
+ */
 const languages: ObjectOfObjects<Language> = {
   "en": { label: "English" },
   "es": { label: "Spanish" },
@@ -28,15 +33,58 @@ const MenuItemComponent = ({checked = false, children, ...props}: MenuItemProps)
   </MenuItem>;
 }
 
-const LangDropdown: React.FC = () => {
-  const [selLang, setSelLang] = useState("en");
+const checkTranslator = async (lang : string) => {
+  const Translator = (window as any).ai.translator;
+  const translatorCapabilities = await Translator.availability({
+    sourceLanguage: 'en',
+    targetLanguage: lang,
+  });
+  console.error(translatorCapabilities)
+  return translatorCapabilities;
+}
 
+/**
+ * Language dropdown component in the header, uses the language context for reading and setting the language
+ * @returns Component
+ */
+const LangDropdown: React.FC = () => {
+  const [aiAvailableLangs, setAIAvailableLangs] = useState<string[]>([]);
+  const { language, setLanguage } = useContext(LanguageContext);
+
+  useEffect(() => {
+    
+    if ('AITranslator' in self) {
+      const checkEachLang = async () => {
+        const availableLangs = [];
+        
+        const langKeys = Object.keys(languages);
+        for (let i = 0; i < langKeys.length; i++) {
+          if (await checkTranslator(langKeys[i])) availableLangs.push(langKeys[i]);
+        }
+        setAIAvailableLangs(availableLangs);
+      }
+      checkEachLang();
+    }
+
+  }, []);
+
+  if ('AITranslator' in self) {
+    // Display spinner while we check if language are available
+    return aiAvailableLangs === null ? <Spinner /> : (<Menu>
+      <MenuButton className="cursor-pointer">
+        <GrLanguage className="text-2xl" />
+      </MenuButton>
+      <MenuItems anchor={{ "to" : "bottom end", "gap": 4, "padding": 4}} className="bg-black rounded">
+        {aiAvailableLangs.map((lang) => <MenuItemComponent key={`header-lang-menu-item-${lang}`} lang={lang} checked={language === lang} onClick={() => setLanguage(lang)}>{languages[lang].label}</MenuItemComponent>)}
+      </MenuItems>
+    </Menu>);
+  }
   return (<Menu>
     <MenuButton className="cursor-pointer">
       <GrLanguage className="text-2xl" />
     </MenuButton>
     <MenuItems anchor={{ "to" : "bottom end", "gap": 4, "padding": 4}} className="bg-black rounded">
-      {Object.keys(languages).map((lang) => <MenuItemComponent checked={selLang === lang} onClick={() => setSelLang(lang)}>{languages[lang].label}</MenuItemComponent>)}
+      <div className="p-4 max-w-2xs">Translation API not enabled/supported in this Browser. On Chrome you may enable it by going <a className="underline" href="chrome://flags/#translation-api" target="blank">here</a>.</div>
     </MenuItems>
   </Menu>);
 }

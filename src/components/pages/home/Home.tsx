@@ -1,10 +1,11 @@
-import { Link } from "react-router";
 
 const Home: React.FC = () => {
   return (
-    <div className="max-w-7xl mx-auto p-8 text-center relative z-10">
-      <h1 className="text-5xl font-bold my-4 leading-tight">Home Page</h1>
-      {/* <Link to="cocktail-search">Cocktail Search Link</Link> */}
+    <div className="max-w-content mx-auto p-8 text-center relative z-10">
+      <section className="grid grid-cols-[33%_auto]">
+        <img className="w-full rounded aspect-square bg-black" />
+        <h1 className="text-5xl font-bold my-4 leading-tight">Francis Tang</h1>
+      </section>
     </div>
   );
 }
