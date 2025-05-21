@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 import Header from "./Header";
+import Stars from "../decorative/Stars";
 import { LanguageContext } from './LanguageContext';
 
 /**
@@ -13,6 +14,7 @@ const Root: React.FC = () => {
 
   return <LanguageContext value={value}>
     <Header />
+    <Stars />
     <main>
       <Outlet />
     </main>

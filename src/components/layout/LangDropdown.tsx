@@ -34,12 +34,12 @@ const MenuItemComponent = ({checked = false, children, ...props}: MenuItemProps)
 }
 
 const checkTranslator = async (lang : string) => {
-  const Translator = (window as any).ai.translator;
+  if (lang === "en") return true;
+  const Translator = (window as any).Translator;
   const translatorCapabilities = await Translator.availability({
     sourceLanguage: 'en',
     targetLanguage: lang,
   });
-  console.error(translatorCapabilities)
   return translatorCapabilities;
 }
 
@@ -52,8 +52,7 @@ const LangDropdown: React.FC = () => {
   const { language, setLanguage } = useContext(LanguageContext);
 
   useEffect(() => {
-    
-    if ('AITranslator' in self) {
+    if ('Translator' in self) {
       const checkEachLang = async () => {
         const availableLangs = [];
         
@@ -68,7 +67,7 @@ const LangDropdown: React.FC = () => {
 
   }, []);
 
-  if ('AITranslator' in self) {
+  if ('Translator' in self) {
     // Display spinner while we check if language are available
     return aiAvailableLangs === null ? <Spinner /> : (<Menu>
       <MenuButton className="cursor-pointer">
@@ -84,7 +83,7 @@ const LangDropdown: React.FC = () => {
       <GrLanguage className="text-2xl" />
     </MenuButton>
     <MenuItems anchor={{ "to" : "bottom end", "gap": 4, "padding": 4}} className="bg-black rounded">
-      <div className="p-4 max-w-2xs">Translation API not enabled/supported in this Browser. On Chrome you may enable it by going <a className="underline" href="chrome://flags/#translation-api" target="blank">here</a>.</div>
+      <div className="p-4 max-w-2xs">Translation API not enabled/supported in this Browser. On Chrome you may enable it by going to "chrome://flags/#translation-api".</div>
     </MenuItems>
   </Menu>);
 }

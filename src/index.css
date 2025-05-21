@@ -6,11 +6,11 @@
 
 @layer base {
   :root {
-    @apply text-[rgba(255,255,255,0.87)] bg-[#242424] font-sans w-full p-0;
+    @apply text-[rgba(255,255,255,0.87)] bg-[#242424] font-sans w-full p-0 overflow-hidden;
   }
 
   body {
-    @apply flex flex-col w-full min-h-screen relative m-0 p-0 text-white;
+    @apply flex flex-col w-full min-h-screen relative m-0 p-0 text-white overflow-hidden h-screen;
 
     font-family: "Roboto", serif;
     font-optical-sizing: auto;
@@ -18,13 +18,21 @@
       "wdth" 100;
   }
 
-  main {
-    @apply grow w-full max-w-[1440px] m-auto;
+  #root {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
+  main {
+    @apply grow w-full max-w-[1440px] m-auto overflow-y-auto contents;
+  }
+
+  
   header {
     @apply h-16;
   }
+
 }
 
 @media (prefers-reduced-motion) {
